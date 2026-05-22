@@ -115,6 +115,7 @@ impl SplatTrainer {
         let device = splats.device();
         let has_alpha = batch.has_alpha();
         let gt_tensor = Tensor::from_data(batch.img_tensor, &device);
+        let rendered_tensor = Tensor::from_data(batch.rendered_tensor, &device);
 
         let (pred_image, aux, refine_weight_holder) = trace_span!("Forward").in_scope(|| {
             // Could generate a random background color, but so far
@@ -126,6 +127,7 @@ impl SplatTrainer {
                 camera,
                 glam::uvec2(img_w as u32, img_h as u32),
                 background,
+                Some(rendered_tensor),
             );
 
             let img = Tensor::from_primitive(TensorPrimitive::Float(diff_out.img));
@@ -138,6 +140,8 @@ impl SplatTrainer {
         let num_intersections = aux.num_intersections().inner();
         let pred_rgb = pred_image.clone().slice(s![.., .., 0..3]);
         let gt_rgb = gt_tensor.clone().slice(s![.., .., 0..3]);
+
+        // Appling rendered
 
         let visible: Tensor<Autodiff<MainBackend>, 1> =
             Tensor::from_primitive(TensorPrimitive::Float(aux.visible));

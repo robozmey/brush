@@ -131,6 +131,7 @@ async fn test_reference() -> Result<()> {
             &cam,
             glam::uvec2(w as u32, h as u32),
             Vec3::ZERO,
+            None,
         );
 
         let (out, aux) = (

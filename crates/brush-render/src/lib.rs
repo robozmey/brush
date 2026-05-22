@@ -64,6 +64,7 @@ pub trait SplatForward<B: Backend> {
         raw_opacities: FloatTensor<B>,
         render_mode: SplatRenderMode,
         background: Vec3,
+        prerendered_img: Option<FloatTensor<B>>, 
         bwd_info: bool,
     ) -> (FloatTensor<B>, RenderAux<B>);
 }

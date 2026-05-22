@@ -143,6 +143,14 @@ async fn read_transforms_file(
         let mask_path = find_mask_path(&vfs, &path).map(|p| p.to_path_buf());
         let image = LoadImage::new(
             vfs.clone(),
+            path.clone(),
+            mask_path.clone(),
+            load_args.max_resolution,
+            load_args.alpha_mode,
+        );
+
+        let rendered = LoadImage::new(
+            vfs.clone(),
             path,
             mask_path,
             load_args.max_resolution,
@@ -204,7 +212,7 @@ async fn read_transforms_file(
             continue;
         }
 
-        let view = SceneView { image, camera };
+        let view = SceneView { image, camera, rendered };
         results.push(view);
     }
     Ok(results)

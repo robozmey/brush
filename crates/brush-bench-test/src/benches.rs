@@ -130,6 +130,8 @@ fn generate_training_batch(resolution: (u32, u32), camera_pos: Vec3) -> SceneBat
         })
         .collect();
 
+    let rendered_tensor = TensorData::new(img_data.clone(), [height as usize, width as usize, 3]);
+    
     let img_tensor = TensorData::new(img_data, [height as usize, width as usize, 3]);
     let camera = Camera::new(camera_pos, Quat::IDENTITY, 50.0, 50.0, glam::vec2(0.5, 0.5));
 
@@ -137,6 +139,7 @@ fn generate_training_batch(resolution: (u32, u32), camera_pos: Vec3) -> SceneBat
         img_tensor,
         alpha_mode: AlphaMode::Transparent,
         camera,
+        rendered_tensor,
     }
 }
 
@@ -161,7 +164,7 @@ mod forward_rendering {
 
         bencher.bench_local(move || {
             for _ in 0..ITERS_PER_SYNC {
-                let _ = render_splats(&splats, &camera, glam::uvec2(1920, 1080), Vec3::ZERO, None);
+                let _ = render_splats(&splats, &camera, glam::uvec2(1920, 1080), Vec3::ZERO, None, None);
             }
             MainBackend::sync(&device).expect("Failed to sync");
         });
@@ -186,6 +189,7 @@ mod forward_rendering {
                     &camera,
                     glam::uvec2(width, height),
                     Vec3::ZERO,
+                    None,
                     None,
                 );
             }
@@ -216,7 +220,7 @@ mod backward_rendering {
         bencher.bench_local(move || {
             for _ in 0..ITERS_PER_SYNC {
                 let diff_out =
-                    render_splats_diff(&splats, &camera, glam::uvec2(1920, 1080), Vec3::ZERO);
+                    render_splats_diff(&splats, &camera, glam::uvec2(1920, 1080), Vec3::ZERO, None);
                 let img: Tensor<DiffBackend, 3> =
                     Tensor::from_primitive(TensorPrimitive::Float(diff_out.img));
                 let _ = img.mean().backward();
@@ -239,7 +243,7 @@ mod backward_rendering {
         bencher.bench_local(move || {
             for _ in 0..ITERS_PER_SYNC {
                 let diff_out =
-                    render_splats_diff(&splats, &camera, glam::uvec2(width, height), Vec3::ZERO);
+                    render_splats_diff(&splats, &camera, glam::uvec2(width, height), Vec3::ZERO, None);
                 let img: Tensor<DiffBackend, 3> =
                     Tensor::from_primitive(TensorPrimitive::Float(diff_out.img));
                 let _ = img.mean().backward();

@@ -63,6 +63,7 @@ impl SplatForward<Self> for MainBackendBase {
         raw_opacities: FloatTensor<Self>,
         render_mode: SplatRenderMode,
         background: Vec3,
+        prerendered_img: Option<FloatTensor<Self>>, 
         bwd_info: bool,
     ) -> (FloatTensor<Self>, RenderAux<Self>) {
         assert!(

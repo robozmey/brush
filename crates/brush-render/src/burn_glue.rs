@@ -28,6 +28,7 @@ impl SplatForward<Self> for Fusion<MainBackendBase> {
         opacity: FloatTensor<Self>,
         render_mode: SplatRenderMode,
         background: Vec3,
+        prerendered_img: Option<FloatTensor<Self>>, 
         bwd_info: bool,
     ) -> (FloatTensor<Self>, RenderAux<Self>) {
         #[derive(Debug)]
@@ -71,6 +72,7 @@ impl SplatForward<Self> for Fusion<MainBackendBase> {
                     h.get_float_tensor::<MainBackendBase>(opacity),
                     self.render_mode,
                     self.background,
+                    None,
                     self.bwd_info,
                 );
 

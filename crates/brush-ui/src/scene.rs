@@ -339,6 +339,7 @@ impl ScenePanel {
                     &camera,
                     pixel_size,
                     settings.background.unwrap_or(Vec3::ZERO),
+                    None,
                     settings.splat_scale,
                 );
 

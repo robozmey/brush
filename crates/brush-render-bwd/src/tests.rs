@@ -45,6 +45,7 @@ fn diffs_at_all() {
         raw_opacity.into_primitive().tensor(),
         SplatRenderMode::Default,
         Vec3::ZERO,
+        None,
     );
     result.aux.validate_values();
 
@@ -114,6 +115,7 @@ fn diffs_many_splats() {
         raw_opacity.into_primitive().tensor(),
         SplatRenderMode::Default,
         Vec3::ZERO,
+        None,
     );
     result.aux.validate_values();
 }

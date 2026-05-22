@@ -129,6 +129,7 @@ impl LoadImage {
 pub struct SceneView {
     pub image: LoadImage,
     pub camera: Camera,
+    pub rendered: LoadImage,
 }
 
 // Encapsulates a multi-view scene including cameras and the splats.
@@ -232,6 +233,7 @@ pub struct SceneBatch {
     pub img_tensor: TensorData,
     pub alpha_mode: AlphaMode,
     pub camera: Camera,
+    pub rendered_tensor: TensorData,
 }
 
 impl SceneBatch {

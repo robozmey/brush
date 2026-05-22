@@ -114,6 +114,8 @@ fn generate_test_batch(resolution: (u32, u32)) -> SceneBatch {
         })
         .collect();
 
+    let rendered_tensor: TensorData = TensorData::new(img_data.clone(), [height as usize, width as usize, 3]);
+
     let img_tensor = TensorData::new(img_data, [height as usize, width as usize, 3]);
     let camera = Camera::new(
         Vec3::new(0.0, 0.0, 3.0),
@@ -127,6 +129,7 @@ fn generate_test_batch(resolution: (u32, u32)) -> SceneBatch {
         img_tensor,
         alpha_mode: AlphaMode::Transparent,
         camera,
+        rendered_tensor,
     }
 }
 
@@ -231,7 +234,7 @@ fn test_gradient_validation() {
     );
     let img_size = glam::uvec2(64, 64);
 
-    let result = render_splats(&splats, &camera, img_size, Vec3::ZERO);
+    let result = render_splats(&splats, &camera, img_size, Vec3::ZERO, None);
 
     let rendered: Tensor<DiffBackend, 3> =
         Tensor::from_primitive(TensorPrimitive::Float(result.img));

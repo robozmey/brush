@@ -48,6 +48,7 @@ pub fn eval_stats<B: Backend + SplatForward<B>>(
             splats.raw_opacities.val().into_primitive().tensor(),
             splats.render_mode,
             Vec3::ZERO,
+            None,
             true,
         );
         (Tensor::from_primitive(TensorPrimitive::Float(img)), aux)

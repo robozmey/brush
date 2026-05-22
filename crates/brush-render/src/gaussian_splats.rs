@@ -2,7 +2,7 @@ use burn::{
     Tensor,
     module::{Module, Param, ParamId},
     prelude::Backend,
-    tensor::{TensorData, TensorPrimitive, activation::sigmoid, s},
+    tensor::{TensorData, TensorPrimitive, ops::FloatTensor, activation::sigmoid, s},
 };
 use clap::ValueEnum;
 use glam::Vec3;
@@ -239,6 +239,7 @@ pub fn render_splats<B: Backend + SplatForward<B>>(
     camera: &Camera,
     img_size: glam::UVec2,
     background: Vec3,
+    prerendered_img: Option<FloatTensor<B>>, 
     splat_scale: Option<f32>,
 ) -> (Tensor<B, 3>, RenderAux<B>) {
     splats.validate_values();
@@ -260,6 +261,7 @@ pub fn render_splats<B: Backend + SplatForward<B>>(
         splats.raw_opacities.val().into_primitive().tensor(),
         splats.render_mode,
         background,
+        prerendered_img,
         false,
     );
     let img = Tensor::from_primitive(TensorPrimitive::Float(img));

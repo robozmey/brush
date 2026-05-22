@@ -59,9 +59,10 @@ fn spawn_train_loop(
 
         // One batch of training data, it's the same every step so can just construct it once.
         let batch = SceneBatch {
-            img_tensor: sample_to_tensor_data(image),
+            img_tensor: sample_to_tensor_data(image.clone()),
             alpha_mode: AlphaMode::Transparent,
             camera: cam,
+            rendered_tensor: sample_to_tensor_data(image),
         };
 
         let mut iter = 0;
@@ -177,6 +178,7 @@ impl eframe::App for App {
                 &self.camera,
                 glam::uvec2(self.image.width(), self.image.height()),
                 Vec3::ZERO, // Just render with a black background
+                None,
                 None,
             );
 

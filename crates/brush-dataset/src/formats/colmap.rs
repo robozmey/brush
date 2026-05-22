@@ -135,7 +135,15 @@ async fn load_dataset_inner(
                 load_args.alpha_mode,
             );
 
-            views.push(SceneView { camera, image });
+            let rendered = LoadImage::new(
+                vfs.clone(),
+                path.to_path_buf(),
+                mask_path.map(|p| p.to_path_buf()),
+                load_args.max_resolution,
+                load_args.alpha_mode,
+            );
+
+            views.push(SceneView { camera, image, rendered });
         }
 
         let (train_views, eval_views) = views.into_iter().enumerate().partition_map(|(i, v)| {

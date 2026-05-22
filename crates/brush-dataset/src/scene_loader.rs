@@ -107,12 +107,14 @@ impl SceneLoader {
                     };
 
                     let img_tensor = sample_to_tensor_data(sample.as_ref().clone());
+                    let rendered_tensor = sample_to_tensor_data(sample.as_ref().clone());
 
                     if send_batch
                         .send(SceneBatch {
                             img_tensor,
                             alpha_mode: view.image.alpha_mode(),
                             camera: view.camera.clone(),
+                            rendered_tensor,
                         })
                         .await
                         .is_err()

@@ -51,6 +51,7 @@ pub trait SplatForwardDiff<B: Backend> {
         raw_opacity: FloatTensor<B>,
         render_mode: SplatRenderMode,
         background: Vec3,
+        prerendered_img: Option<FloatTensor<B>>, 
     ) -> SplatOutputDiff<B>;
 }
 
@@ -162,6 +163,7 @@ impl<B: Backend + SplatBackwardOps<B> + SplatForward<B>, C: CheckpointStrategy>
         raw_opacity: FloatTensor<Self>,
         render_mode: SplatRenderMode,
         background: Vec3,
+        prerendered_img: Option<FloatTensor<Self>>, 
     ) -> SplatOutputDiff<Self> {
         // Get backend tensors & dequantize if needed. Could try and support quantized inputs
         // in the future.
@@ -193,6 +195,7 @@ impl<B: Backend + SplatBackwardOps<B> + SplatForward<B>, C: CheckpointStrategy>
             raw_opacity.clone().into_primitive(),
             render_mode,
             background,
+            None,
             true,
         );
 
@@ -419,6 +422,7 @@ pub fn render_splats<B>(
     camera: &Camera,
     img_size: glam::UVec2,
     background: Vec3,
+    prerendered_img: Option<Tensor<B, 3>>, 
 ) -> SplatOutputDiff<B>
 where
     B: Backend + SplatForwardDiff<B>,
@@ -434,6 +438,7 @@ where
         splats.raw_opacities.val().into_primitive().tensor(),
         splats.render_mode,
         background,
+        prerendered_img.map(|x| x.into_primitive().tensor())
     );
     result.aux.validate_values();
     result

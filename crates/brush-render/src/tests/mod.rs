@@ -37,6 +37,7 @@ fn renders_at_all() {
         raw_opacity.into_primitive().tensor(),
         SplatRenderMode::Default,
         Vec3::ZERO,
+        None,
         true,
     );
     aux.validate_values();
@@ -107,6 +108,7 @@ fn renders_many_splats() {
         raw_opacity.into_primitive().tensor(),
         SplatRenderMode::Default,
         Vec3::ZERO,
+        None,
         true,
     );
     aux.validate_values();
